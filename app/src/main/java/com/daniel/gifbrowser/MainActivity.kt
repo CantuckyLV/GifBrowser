@@ -17,11 +17,12 @@ class MainActivity : AppCompatActivity() {
         flFragmentPH = findViewById(R.id.fl_fragment_ph)
         //viewModel = MainActivityViewModel()
         //viewModel.requestCOmmits()!!.observe(this, Observer<ArrayList<CommitDetail>> { posts -> showCommits(posts) })
+        showTrendyGifsTemp()
     }
 
     fun showTrendyGifsTemp(){
         val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        val frag = CommitsFragment()
+        val frag = TrendyGifsFragment()
         //frag.arguments = bundle
         fragmentTransaction.replace(R.id.fl_fragment_ph, frag,"fragment_ph_fl")
         fragmentTransaction.commit()
