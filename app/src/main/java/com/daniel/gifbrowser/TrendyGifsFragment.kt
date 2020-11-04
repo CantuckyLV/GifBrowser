@@ -1,6 +1,7 @@
 package com.daniel.gifbrowser
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,10 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.daniel.gifbrowser.Adapters.GifsAdapter
-import com.daniel.gifbrowser.Domain.GifObject
-import com.daniel.gifbrowser.Domain.TrendyGifsRequest
-import com.daniel.gifbrowser.Domain.GifListResponse
-import com.daniel.gifbrowser.Domain.GifSearchRequest
+import com.daniel.gifbrowser.Domain.*
 import com.daniel.gifbrowser.ViewModel.TrendyGifsFragmentViewModel
 
 /**
@@ -28,6 +26,7 @@ class TrendyGifsFragment : Fragment() {
     private lateinit var trendyGifsRequest: TrendyGifsRequest
     private lateinit var gifSearchRequest: GifSearchRequest
     private lateinit var gifList : ArrayList<GifObject>
+    private lateinit var gifSimpleList : ArrayList<GifSimpleObject>
     private lateinit var rvGifs : RecyclerView
     private lateinit var  etSearch : EditText
     private lateinit var  btnSearch : Button
@@ -47,7 +46,7 @@ class TrendyGifsFragment : Fragment() {
         btnSearch = view!!.findViewById(R.id.btn_search)
         btnSearch.setOnClickListener(View.OnClickListener {
             gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),15,0,"g","en","")
-            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, Observer<GifListResponse> { gifs -> setupGifs(gifs) })
+            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, Observer<GifListResponse>{gifs -> setupGifs(gifs)})
         })
         trendyGifsRequest = TrendyGifsRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",25,0,"g","")
         viewModel.getTrendyGifs(trendyGifsRequest)!!.observe(this, Observer<GifListResponse> { gifs -> setupGifs(gifs) })
@@ -55,7 +54,11 @@ class TrendyGifsFragment : Fragment() {
 
     private fun setupGifs(gifs:GifListResponse){
         gifList = gifs.data!!
-        val gifsAdapter =  GifsAdapter(gifs.data,activity!!.applicationContext)
+        val gifsAdapter =  GifsAdapter(gifList,activity!!.applicationContext, object : GifsAdapter.OnItemClickListener {
+            override fun onItemClick(v:View, position: Int) {
+                Log.e("holos fav", "" + position)
+            }
+        })
         rvGifs.adapter = gifsAdapter
         rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
 

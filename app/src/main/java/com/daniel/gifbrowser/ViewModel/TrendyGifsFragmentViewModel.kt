@@ -13,11 +13,9 @@ class TrendyGifsFragmentViewModel : ViewModel() {
     private var _mutableLiveData = MutableLiveData<GifListResponse>()
     val mutableLiveData : LiveData<GifListResponse>
         get() = _mutableLiveData
+
     private val trendyGifsRepository = TrendyGifsRepository()
-    /**
-     * sets the Live data value to be the given arraylist of commits
-     * @return LiveData the Live data representing the list of commits
-     */
+
     fun getTrendyGifs(trendyGifsRequest : TrendyGifsRequest): LiveData<GifListResponse>? {
         _mutableLiveData = trendyGifsRepository.requestTrendyGifs(trendyGifsRequest) as MutableLiveData<GifListResponse>
         return mutableLiveData

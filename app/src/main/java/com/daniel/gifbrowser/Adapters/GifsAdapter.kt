@@ -13,13 +13,18 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.ArrayList
 
-class GifsAdapter(gifs: ArrayList<GifObject>, context: Context): RecyclerView.Adapter<GifsViewHolder>() {
+class GifsAdapter(gifs: ArrayList<GifObject>, context: Context, mOnItemClickListener: GifsAdapter.OnItemClickListener): RecyclerView.Adapter<GifsViewHolder>() {
     private val gifs: ArrayList<GifObject>? = gifs
     private val context = context
+    private val mOnItemClickListener: GifsAdapter.OnItemClickListener? = mOnItemClickListener
+
+    interface OnItemClickListener {
+        fun onItemClick(v:View, position: Int)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val itemView = inflater.inflate(R.layout.gif_item, parent, false)
-        return GifsViewHolder(itemView)
+        return mOnItemClickListener?.let { GifsViewHolder(itemView, it) }!!
     }
 
     override fun getItemCount(): Int {
