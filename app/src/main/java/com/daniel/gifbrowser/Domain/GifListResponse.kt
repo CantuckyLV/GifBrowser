@@ -3,7 +3,7 @@ package com.daniel.gifbrowser.Domain
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class TrendyGifsResponse (
+data class GifListResponse (
     @SerializedName("data")
     val data : ArrayList<GifObject>?,
     @SerializedName("pagination")
