@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.ArrayList
 
 /**
- * POJO containing a list of commits
+ * POJO containing a list of gifs
  */
 data class TrendyGifsRequest (
     @SerializedName("api_key")

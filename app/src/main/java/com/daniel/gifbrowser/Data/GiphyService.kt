@@ -1,12 +1,9 @@
 package com.daniel.gifbrowser.Data
 
 
-import com.daniel.gifbrowser.Domain.TrendyGifsRequest
-import com.daniel.gifbrowser.Domain.TrendyGifsResponse
+import com.daniel.gifbrowser.Domain.GifListResponse
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -14,7 +11,8 @@ import retrofit2.http.Query
  */
 interface  GiphyService{
     @GET("v1/gifs/trending?")
-    fun requestTrendyGifs(@Query("api_key") apikey : String, @Query("limit") limit : Int, @Query("rating") rating : String): Call<TrendyGifsResponse>?
-    /*@GET("")
-    fun getUser(@Path("") id:String): Call<>?*/
+    fun requestTrendyGifs(@Query("api_key") apikey : String, @Query("limit") limit : Int, @Query("rating") rating : String): Call<GifListResponse>?
+
+    @GET("v1/gifs/search?")
+    fun requestGifSearch(@Query("api_key") apikey : String,@Query("q") q : String,@Query("limit") limit : Int,@Query("offset") offset : Int,@Query("rating") rating : String,@Query("lang") lang : String): Call<GifListResponse>?
 }
