@@ -1,16 +1,20 @@
 package com.daniel.gifbrowser.Data
 
+import android.os.AsyncTask
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.daniel.gifbrowser.Domain.TrendyGifsRequest
 import com.daniel.gifbrowser.Domain.GifListResponse
 import com.daniel.gifbrowser.Domain.GifSearchRequest
+import com.daniel.gifbrowser.Domain.GifSimpleObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
+import javax.inject.Inject
 
-class TrendyGifsRepository : BaseRepository() {
+class TrendyGifsRepository @Inject constructor(private val gifCRUD : GifCRUD) : BaseRepository() {
 
 
     private val _mutableLiveData = MutableLiveData<GifListResponse>()
@@ -52,5 +56,14 @@ class TrendyGifsRepository : BaseRepository() {
             }
         })
         return mutableLiveData
+    }
+    fun saveGif(gifSimpleObject: GifSimpleObject){
+        AsyncTask.execute {
+            gifCRUD.insertGif(gifSimpleObject)
+        }
+    }
+
+    fun  getGifs():LiveData<List<GifSimpleObject?>?>{
+        return gifCRUD.getFavoriteGifs()
     }
 }
