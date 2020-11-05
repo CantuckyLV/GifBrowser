@@ -13,5 +13,5 @@ interface GifCRUD{
     fun getFavoriteGifs(): LiveData<List<GifSimpleObject?>?>
 
     @Delete
-    fun deleteGif(u: GifSimpleObject?)
+    fun deleteGif(gifSimpleObject: GifSimpleObject?)
 }

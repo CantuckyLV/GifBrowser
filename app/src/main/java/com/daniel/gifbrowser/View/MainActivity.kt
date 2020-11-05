@@ -1,10 +1,11 @@
-package com.daniel.gifbrowser
+package com.daniel.gifbrowser.View
 
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.daniel.gifbrowser.Adapters.GifScreensPagerAdapter
+import com.daniel.gifbrowser.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -41,5 +42,6 @@ class MainActivity : FragmentActivity() {
                 tab.text = "Favorites"
             }
         }.attach()
+        vpFragments.setPageTransformer(ZoomOutPageTransformer())
     }
 }

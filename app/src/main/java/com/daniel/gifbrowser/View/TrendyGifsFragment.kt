@@ -1,16 +1,14 @@
-package com.daniel.gifbrowser
+package com.daniel.gifbrowser.View
 
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import androidx.fragment.app.viewModels
+import android.widget.RelativeLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,6 +17,7 @@ import androidx.room.Room
 import com.daniel.gifbrowser.Adapters.GifsAdapter
 import com.daniel.gifbrowser.DB.GifDB
 import com.daniel.gifbrowser.Domain.*
+import com.daniel.gifbrowser.R
 import com.daniel.gifbrowser.ViewModel.Factory.TrendyGifsFragmentViewModelFactory
 import com.daniel.gifbrowser.ViewModel.TrendyGifsFragmentViewModel
 
@@ -29,12 +28,15 @@ class TrendyGifsFragment : Fragment() {
 
     private lateinit var viewModel : TrendyGifsFragmentViewModel
     private lateinit var trendyGifsRequest: TrendyGifsRequest
-    private lateinit var gifSearchRequest: GifSearchRequest
+    private lateinit var rlLoading : RelativeLayout
+    private lateinit var gifSearchRequest :GifSearchRequest
     private lateinit var gifList : ArrayList<GifObject>
-    private lateinit var gifSimpleList : ArrayList<GifSimpleObject>
+    private val gifSimpleList = ArrayList<GifSimpleObject>()
     private lateinit var rvGifs : RecyclerView
     private lateinit var  etSearch : EditText
     private lateinit var  btnSearch : Button
+    private lateinit var gifsObserver : Observer<GifListResponse>
+    private lateinit var favsgifList : List<GifSimpleObject?>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,35 +57,58 @@ class TrendyGifsFragment : Fragment() {
         etSearch = view!!.findViewById(R.id.et_search)
         btnSearch = view!!.findViewById(R.id.btn_search)
         btnSearch.setOnClickListener(View.OnClickListener {
-            /*gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),15,0,"g","en","")
-            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, Observer<GifListResponse>{gifs -> setupGifs(gifs)})*/
-            getGifsTmp()
+            fetchGifs()
         })
-        trendyGifsRequest = TrendyGifsRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",25,0,"g","")
-        viewModel.getTrendyGifs(trendyGifsRequest)!!.observe(this, Observer<GifListResponse> { gifs -> setupGifs(gifs) })
+        rlLoading = view!!.findViewById(R.id.rl_loading)
+        rlLoading.visibility = View.VISIBLE
+        viewModel.getGifs()!!.observe(this, Observer { gifs -> favsgifList = gifs!! } )
+        gifsObserver = Observer { gifs -> setupGifs(gifs) }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchGifs()
     }
 
     private fun setupGifs(gifs:GifListResponse){
         gifList = gifs.data!!
-        val gifsAdapter =  GifsAdapter(gifList,activity!!.applicationContext, object : GifsAdapter.OnItemClickListener {
+        gifSimpleList.clear()
+        for(gifObject in gifList){
+            val gifSimpleObject = GifSimpleObject(gifObject.id,gifObject.images.original.url,false)
+            var isFav:Boolean
+            for (favGif in favsgifList){
+                if(favGif?.id == gifSimpleObject.id) gifSimpleObject.isFav = true
+            }
+            gifSimpleList.add(gifSimpleObject)
+        }
+        val gifsAdapter =  GifsAdapter(gifSimpleList,activity!!.applicationContext, object : GifsAdapter.OnItemClickListener {
             override fun onItemClick(v:View, position: Int) {
-                val tmpGifObj = gifList.get(position)
-                Log.e("Save", "" + GifSimpleObject(tmpGifObj.id,tmpGifObj.images.original.url,false).toString())
-                viewModel.saveGif(GifSimpleObject(tmpGifObj.id,tmpGifObj.images.original.url,false))
+                val tmpGifObj = gifSimpleList.get(position)
+                gifSimpleList.get(position).isFav = true
+                viewModel.saveGif(tmpGifObj)
+                rvGifs.adapter!!.notifyDataSetChanged()
             }
         })
         rvGifs.adapter = gifsAdapter
         rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
+        rlLoading.visibility = View.GONE
 
     }
 
-    private fun getGifsTmp(){
-        viewModel.getGifs().observe(this, Observer<List<GifSimpleObject?>?> { gifsDb -> tmpFunc(gifsDb as ArrayList<GifSimpleObject>) })
+    private fun fetchGifs(){
+        rlLoading.visibility = View.VISIBLE
+        if(etSearch.text.length>0){
+            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),15,0,"g","en","")
+            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
+        }else if(etSearch.text.length==0){
+            requestTrending()
+        }
     }
-
-    private fun tmpFunc(gifsDb : ArrayList<GifSimpleObject>){
-        Log.e("in DB",""+gifsDb)
-
+    private fun requestTrending(){
+        rlLoading.visibility = View.VISIBLE
+        trendyGifsRequest = TrendyGifsRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",25,0,"g","")
+        viewModel.getTrendyGifs(trendyGifsRequest)!!.observe(this, gifsObserver )
     }
 
 

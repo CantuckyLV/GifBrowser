@@ -13,5 +13,5 @@ data class GifSimpleObject (
     @SerializedName("url")
     val url : String,
     @SerializedName("is_fav")
-    val isFav : Boolean
+    var isFav : Boolean
 ):Serializable

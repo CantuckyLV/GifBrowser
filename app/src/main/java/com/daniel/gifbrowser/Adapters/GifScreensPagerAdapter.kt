@@ -3,8 +3,8 @@ package com.daniel.gifbrowser.Adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.daniel.gifbrowser.FavoritesFragment
-import com.daniel.gifbrowser.TrendyGifsFragment
+import com.daniel.gifbrowser.View.FavoritesFragment
+import com.daniel.gifbrowser.View.TrendyGifsFragment
 
 class GifScreensPagerAdapter(fa: FragmentActivity): FragmentStateAdapter(fa) {
     override fun getItemCount(): Int {
