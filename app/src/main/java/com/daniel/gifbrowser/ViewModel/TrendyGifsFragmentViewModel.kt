@@ -23,8 +23,16 @@ class TrendyGifsFragmentViewModel @Inject constructor(private val gifDB : GifDB 
         _mutableLiveData = trendyGifsRepository.requestTrendyGifs(trendyGifsRequest) as MutableLiveData<GifListResponse>
         return mutableLiveData
     }
+    fun getTrendyGifs(trendyGifsRequest : TrendyGifsRequest,mockedResponse : GifListResponse): LiveData<GifListResponse>? {
+        _mutableLiveData.value = mockedResponse
+        return mutableLiveData
+    }
     fun getGifSearch(gifSearchRequest : GifSearchRequest): LiveData<GifListResponse>? {
         _mutableLiveData = trendyGifsRepository.requestGifSearch(gifSearchRequest) as MutableLiveData<GifListResponse>
+        return mutableLiveData
+    }
+    fun getGifSearch(gifSearchRequest : GifSearchRequest,mockedResponse : GifListResponse): LiveData<GifListResponse>? {
+        _mutableLiveData.value = mockedResponse
         return mutableLiveData
     }
     fun saveGif(gifSimpleObject: GifSimpleObject){

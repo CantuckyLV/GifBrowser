@@ -30,13 +30,13 @@ class TrendyGifsFragment : Fragment() {
     private lateinit var trendyGifsRequest: TrendyGifsRequest
     private lateinit var rlLoading : RelativeLayout
     private lateinit var gifSearchRequest :GifSearchRequest
-    private lateinit var gifList : ArrayList<GifObject>
+    private  var gifList : ArrayList<GifObject> = ArrayList<GifObject>()
     private val gifSimpleList = ArrayList<GifSimpleObject>()
     private lateinit var rvGifs : RecyclerView
     private lateinit var  etSearch : EditText
     private lateinit var  btnSearch : Button
     private lateinit var gifsObserver : Observer<GifListResponse>
-    private lateinit var favsgifList : List<GifSimpleObject?>
+    private  var favsgifList : List<GifSimpleObject?> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +62,7 @@ class TrendyGifsFragment : Fragment() {
         rlLoading = view!!.findViewById(R.id.rl_loading)
         rlLoading.visibility = View.VISIBLE
         viewModel.getGifs()!!.observe(this, Observer { gifs -> favsgifList = gifs!! } )
-        gifsObserver = Observer { gifs -> setupGifs(gifs) }
+        gifsObserver = Observer { gifs -> setupGifs(gifs.data) }
 
     }
 
@@ -71,8 +71,8 @@ class TrendyGifsFragment : Fragment() {
         fetchGifs()
     }
 
-    private fun setupGifs(gifs:GifListResponse){
-        gifList = gifs.data!!
+    fun setupGifs(gifs:ArrayList<GifObject>?):Int{
+        gifList = gifs!!
         gifSimpleList.clear()
         for(gifObject in gifList){
             val gifSimpleObject = GifSimpleObject(gifObject.id,gifObject.images.original.url,false)
@@ -82,24 +82,30 @@ class TrendyGifsFragment : Fragment() {
             }
             gifSimpleList.add(gifSimpleObject)
         }
-        val gifsAdapter =  GifsAdapter(gifSimpleList,activity!!.applicationContext, object : GifsAdapter.OnItemClickListener {
-            override fun onItemClick(v:View, position: Int) {
-                val tmpGifObj = gifSimpleList.get(position)
-                gifSimpleList.get(position).isFav = true
-                viewModel.saveGif(tmpGifObj)
-                rvGifs.adapter!!.notifyDataSetChanged()
-            }
-        })
-        rvGifs.adapter = gifsAdapter
-        rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
+        try{
+            val gifsAdapter =  GifsAdapter(gifSimpleList,activity!!.applicationContext, object : GifsAdapter.OnItemClickListener {
+                override fun onItemClick(v:View, position: Int) {
+                    val tmpGifObj = gifSimpleList.get(position)
+                    gifSimpleList.get(position).isFav = true
+                    viewModel.saveGif(tmpGifObj)
+                    rvGifs.adapter!!.notifyDataSetChanged()
+                }
+            })
+            rvGifs.adapter = gifsAdapter
+            rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
+        }catch(e:Exception){
+            e.printStackTrace()
+        }
+
         rlLoading.visibility = View.GONE
+        return 3
 
     }
 
     private fun fetchGifs(){
         rlLoading.visibility = View.VISIBLE
         if(etSearch.text.length>0){
-            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),15,0,"g","en","")
+            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),25,0,"g","en","")
             viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
         }else if(etSearch.text.length==0){
             requestTrending()

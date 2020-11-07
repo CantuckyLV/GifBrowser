@@ -13,8 +13,9 @@ class MainActivity : FragmentActivity() {
 
     //private  lateinit var viewModel : MainActivityViewModel
     private lateinit var flFragmentPH : FrameLayout
-    private lateinit var vpFragments: ViewPager2
+    lateinit var vpFragments: ViewPager2
     private lateinit var  tabLayout : TabLayout
+    private val pagerAdapter = GifScreensPagerAdapter(this)
     //private var currentlyDisplayed = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,6 @@ class MainActivity : FragmentActivity() {
         //frag.arguments = bundle
         fragmentTransaction.replace(R.id.fl_fragment_ph, frag,"fragment_ph_fl")
         fragmentTransaction.commit()*/
-        val pagerAdapter = GifScreensPagerAdapter(this)
         vpFragments.adapter = pagerAdapter
         TabLayoutMediator(tabLayout, vpFragments) { tab, position ->
 

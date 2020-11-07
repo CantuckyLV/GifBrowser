@@ -12,9 +12,17 @@ import javax.inject.Inject
 class FavoritesFragmentViewModel @Inject constructor(private val gifDB : GifDB) : ViewModel(){
 
     private val favoritesRepository = FavoritesRepository(gifDB.gifCRUD())
+    private var _mutableLiveData = MutableLiveData<ArrayList<GifSimpleObject>>()
+    val mutableLiveData : LiveData<ArrayList<GifSimpleObject>>
+        get() = _mutableLiveData
 
     fun getFavoritesList() : LiveData<List<GifSimpleObject?>?> {
         return favoritesRepository.getFavoritesList()
+    }
+
+    fun getFavoritesList(mockedDB : ArrayList<GifSimpleObject>) : LiveData<ArrayList<GifSimpleObject>> {
+        _mutableLiveData.value = mockedDB
+        return mutableLiveData
     }
     fun reMoveFavorite(gifSimpleObject : GifSimpleObject){
         favoritesRepository.removeFavorite(gifSimpleObject)
