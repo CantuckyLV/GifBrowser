@@ -22,11 +22,11 @@ class TrendyGifsRepository @Inject constructor(private val gifCRUD : GifCRUD) : 
         get() = _mutableLiveData
 
     fun requestTrendyGifs(trendyGifsRequest : TrendyGifsRequest): LiveData<GifListResponse> {
-        val call = service.requestTrendyGifs(trendyGifsRequest.apiKey,trendyGifsRequest.limit,trendyGifsRequest.rating)
+        val call = service.requestTrendyGifs(trendyGifsRequest.apiKey,trendyGifsRequest.limit,trendyGifsRequest.rating,trendyGifsRequest.offset)
         call!!.enqueue(object : Callback<GifListResponse?> {
             override fun onResponse(call: Call<GifListResponse?>, response: Response<GifListResponse?>) {
                 if (response.code() == 200) {
-                    println("success")
+                    Log.e("success",""+response.body()!!.pagination)
                     _mutableLiveData.value = response.body()!!
                 }else{
                     println(response)
@@ -44,7 +44,6 @@ class TrendyGifsRepository @Inject constructor(private val gifCRUD : GifCRUD) : 
         call!!.enqueue(object : Callback<GifListResponse?> {
             override fun onResponse(call: Call<GifListResponse?>, response: Response<GifListResponse?>) {
                 if (response.code() == 200) {
-                    println("success")
                     _mutableLiveData.value = response.body()!!
                 }else{
                     println(response)

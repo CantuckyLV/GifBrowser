@@ -2,13 +2,15 @@ package com.daniel.gifbrowser.View
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -37,6 +39,11 @@ class TrendyGifsFragment : Fragment() {
     private lateinit var  btnSearch : Button
     private lateinit var gifsObserver : Observer<GifListResponse>
     private  var favsgifList : List<GifSimpleObject?> = emptyList()
+    private var currentPage = 0
+    private var offset = 0
+    private var isLoadingMore = false
+    private lateinit var recyclerViewState : Parcelable
+    private lateinit var searchTerm : String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +61,30 @@ class TrendyGifsFragment : Fragment() {
         ).build()
         viewModel = ViewModelProvider(this,TrendyGifsFragmentViewModelFactory(db)).get(TrendyGifsFragmentViewModel::class.java)
         rvGifs = view!!.findViewById(R.id.rv_gifs)
+        rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
+        rvGifs.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!recyclerView.canScrollVertically(1)) {
+                    isLoadingMore = true
+                    recyclerViewState = rvGifs.layoutManager!!.onSaveInstanceState()!!
+                    if(currentPage == 0){
+                        requestTrending()
+                    }else if(currentPage == 1){
+                        fetchGifs()
+                    }
+                    Log.e("Loading more items","dfwf")
+
+                }
+            }
+        })
+
         etSearch = view!!.findViewById(R.id.et_search)
         btnSearch = view!!.findViewById(R.id.btn_search)
         btnSearch.setOnClickListener(View.OnClickListener {
+            searchTerm = etSearch.text.toString()
+            offset = 0
+            isLoadingMore = false
             fetchGifs()
         })
         rlLoading = view!!.findViewById(R.id.rl_loading)
@@ -72,8 +100,12 @@ class TrendyGifsFragment : Fragment() {
     }
 
     fun setupGifs(gifs:ArrayList<GifObject>?):Int{
+        offset +=25
         gifList = gifs!!
-        gifSimpleList.clear()
+        if(!isLoadingMore){
+            gifSimpleList.clear()
+        }
+
         for(gifObject in gifList){
             val gifSimpleObject = GifSimpleObject(gifObject.id,gifObject.images.original.url,false)
             var isFav:Boolean
@@ -92,7 +124,10 @@ class TrendyGifsFragment : Fragment() {
                 }
             })
             rvGifs.adapter = gifsAdapter
-            rvGifs!!.layoutManager = GridLayoutManager(activity, 3)
+            if(isLoadingMore){
+                rvGifs.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+            }
+
         }catch(e:Exception){
             e.printStackTrace()
         }
@@ -103,18 +138,27 @@ class TrendyGifsFragment : Fragment() {
     }
 
     private fun fetchGifs(){
+        currentPage = 1
         rlLoading.visibility = View.VISIBLE
-        if(etSearch.text.length>0){
-            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),25,0,"g","en","")
+        if(etSearch.text.length>0&&searchTerm.equals(etSearch.text.toString())){
+            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",searchTerm,25,offset,"g","en","")
             viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
-        }else if(etSearch.text.length==0){
+        }else if(etSearch.text.length>0&&!(searchTerm.equals(etSearch.text.toString()))){
+            isLoadingMore = false
+            offset = 0
+            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),25,offset,"g","en","")
+            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
+        }
+        else if(etSearch.text.length==0){
             requestTrending()
         }
     }
     private fun requestTrending(){
+        currentPage = 0
         rlLoading.visibility = View.VISIBLE
-        trendyGifsRequest = TrendyGifsRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",25,0,"g","")
+        trendyGifsRequest = TrendyGifsRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",25,offset,"g","")
         viewModel.getTrendyGifs(trendyGifsRequest)!!.observe(this, gifsObserver )
+
     }
 
 

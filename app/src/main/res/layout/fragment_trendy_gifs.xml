@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Name"
+                android:hint="Keywords"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_search"
                 app:layout_constraintStart_toStartOf="parent"
