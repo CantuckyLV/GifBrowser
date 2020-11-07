@@ -140,16 +140,12 @@ class TrendyGifsFragment : Fragment() {
     private fun fetchGifs(){
         currentPage = 1
         rlLoading.visibility = View.VISIBLE
-        if(etSearch.text.length>0&&searchTerm.equals(etSearch.text.toString())){
+        if(etSearch.text.length>0){
             gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",searchTerm,25,offset,"g","en","")
-            viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
-        }else if(etSearch.text.length>0&&!(searchTerm.equals(etSearch.text.toString()))){
-            isLoadingMore = false
-            offset = 0
-            gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",etSearch.text.toString(),25,offset,"g","en","")
             viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
         }
         else if(etSearch.text.length==0){
+            offset = 0
             requestTrending()
         }
     }
