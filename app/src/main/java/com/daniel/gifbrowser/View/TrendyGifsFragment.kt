@@ -89,13 +89,13 @@ class TrendyGifsFragment : Fragment() {
         })
         rlLoading = view!!.findViewById(R.id.rl_loading)
         rlLoading.visibility = View.VISIBLE
-        viewModel.getGifs()!!.observe(this, Observer { gifs -> favsgifList = gifs!! } )
         gifsObserver = Observer { gifs -> setupGifs(gifs.data) }
 
     }
 
     override fun onResume() {
         super.onResume()
+        viewModel.getGifs()!!.observe(this, Observer { gifs -> favsgifList = gifs!! } )
         fetchGifs()
     }
 
@@ -145,8 +145,13 @@ class TrendyGifsFragment : Fragment() {
             viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
         }
         else if(etSearch.text.length==0){
-            offset = 0
-            requestTrending()
+            if(isLoadingMore){
+                gifSearchRequest = GifSearchRequest("HbjDDROEXryOkYhSygrKODfKvko95NyF",searchTerm,25,offset,"g","en","")
+                viewModel.getGifSearch(gifSearchRequest)!!.observe(this, gifsObserver)
+            }else{
+                offset = 0
+                requestTrending()
+            }
         }
     }
     private fun requestTrending(){

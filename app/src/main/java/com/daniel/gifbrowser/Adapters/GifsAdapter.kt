@@ -38,9 +38,9 @@ class GifsAdapter(gifs: ArrayList<GifSimpleObject>, context: Context, mOnItemCli
         val favIndicator = holder.favIndicator
         Glide.with(context).load(gif.url).into(imageGif)
         if(gif.isFav){
-            favIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_launcher_foreground))
+            favIndicator.setImageDrawable(context.getDrawable(R.drawable.heartfav))
         }else{
-            favIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_launcher_background))
+            favIndicator.setImageDrawable(context.getDrawable(R.drawable.heartunfav))
         }
         var uri: URI? = null
     }
