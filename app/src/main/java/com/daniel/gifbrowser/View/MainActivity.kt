@@ -1,11 +1,16 @@
 package com.daniel.gifbrowser.View
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.daniel.gifbrowser.Adapters.GifScreensPagerAdapter
 import com.daniel.gifbrowser.R
+import com.daniel.gifbrowser.Util.TypefaceSpan
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -44,4 +49,5 @@ class MainActivity : FragmentActivity() {
         }.attach()
         vpFragments.setPageTransformer(ZoomOutPageTransformer())
     }
+
 }

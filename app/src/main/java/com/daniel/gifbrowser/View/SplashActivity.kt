@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.daniel.gifbrowser.R
 import java.lang.Exception
 
@@ -31,6 +34,7 @@ class SplashActivity : AppCompatActivity() {
             }
         }.start()
         startHandler()
+        setupActionBar()
     }
 
     private val crossRunnable = object : Runnable {
@@ -41,6 +45,11 @@ class SplashActivity : AppCompatActivity() {
     }
     private fun startHandler(){
         timerHandler.post(crossRunnable)
+    }
+    fun setupActionBar(){
+        val s = "Gif Browser"
+        supportActionBar!!.setTitle(s)
+        supportActionBar!!.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.gradient, null))
     }
 
     private fun crossFadeSplash(){
