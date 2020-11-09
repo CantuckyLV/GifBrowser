@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.daniel.gifbrowser.Domain.GifSimpleObject
 
+/**
+ * DataAccessObject for the DB of Gifs
+ */
+
 @Dao
 interface GifCRUD{
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -5,6 +5,9 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+/**
+ * POJO representing a gif as it will be saved to the DB
+ */
 @Entity(tableName = "FAVGIFS")
 data class GifSimpleObject (
     @PrimaryKey

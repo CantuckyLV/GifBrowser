@@ -13,12 +13,18 @@ import java.lang.StringBuilder
 import java.net.URI
 import java.net.URISyntaxException
 import java.util.ArrayList
+/**
+ * Adapter for the RecyclerView of Gifs
+ */
 
 class GifsAdapter(gifs: ArrayList<GifSimpleObject>, context: Context, mOnItemClickListener: GifsAdapter.OnItemClickListener): RecyclerView.Adapter<GifsViewHolder>() {
     private val gifs: ArrayList<GifSimpleObject>? = gifs
     private val context = context
     private val mOnItemClickListener: GifsAdapter.OnItemClickListener? = mOnItemClickListener
 
+    /**
+     * interface that allows the Recyclerview item to listen for clicks
+     */
     interface OnItemClickListener {
         fun onItemClick(v:View, position: Int)
     }

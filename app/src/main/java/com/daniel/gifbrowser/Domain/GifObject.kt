@@ -2,7 +2,9 @@ package com.daniel.gifbrowser.Domain
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
-
+/**
+ * POJO representing GifObject
+ */
 data class GifObject (
     @SerializedName("type")
     val type : String,

@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+/**
+ * Base Repository class all repositories will inherit from
+ */
 
 abstract class BaseRepository {
     /**

@@ -1,19 +1,17 @@
 package com.daniel.gifbrowser.View
 
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.daniel.gifbrowser.Adapters.GifScreensPagerAdapter
 import com.daniel.gifbrowser.R
-import com.daniel.gifbrowser.Util.TypefaceSpan
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * The Class representing the main activity
+ */
 class MainActivity : FragmentActivity() {
 
     //private  lateinit var viewModel : MainActivityViewModel
@@ -32,12 +30,10 @@ class MainActivity : FragmentActivity() {
         SetupViews()
     }
 
+    /**
+     * Sets up the view elements, Sets the titles for the tabs and initializes the adapter for the viewpager.
+     */
     fun SetupViews(){
-        /*val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        val frag = TrendyGifsFragment()
-        //frag.arguments = bundle
-        fragmentTransaction.replace(R.id.fl_fragment_ph, frag,"fragment_ph_fl")
-        fragmentTransaction.commit()*/
         vpFragments.adapter = pagerAdapter
         TabLayoutMediator(tabLayout, vpFragments) { tab, position ->
 

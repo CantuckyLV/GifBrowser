@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
- * POJO containing a list of gifs
+ * POJO representing a request for the server
  */
 data class GifSearchRequest (
     @SerializedName("api_key")

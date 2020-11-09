@@ -3,6 +3,9 @@ package com.daniel.gifbrowser.Domain
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+/**
+ * POJO representing a RenditionObject
+ */
 data class RenditionObject (
     @SerializedName("url")
     val url : String,

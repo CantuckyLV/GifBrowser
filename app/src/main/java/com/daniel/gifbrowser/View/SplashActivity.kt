@@ -16,6 +16,10 @@ import androidx.core.content.res.ResourcesCompat
 import com.daniel.gifbrowser.R
 import java.lang.Exception
 
+/**
+ * The Class representing the Splash activity
+ */
+
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var testo : TextView
@@ -37,21 +41,33 @@ class SplashActivity : AppCompatActivity() {
         setupActionBar()
     }
 
+    /**
+     * calls crossFadeSplash method and calls it every 500 miliseconds
+     */
     private val crossRunnable = object : Runnable {
         override fun run() {
             crossFadeSplash()
             timerHandler.postDelayed(this, 500)
         }
     }
+    /**
+     * initializes the timehandler for the animation
+     */
     private fun startHandler(){
         timerHandler.post(crossRunnable)
     }
+    /**
+     * Sets up the bar color and title
+     */
     fun setupActionBar(){
         val s = "Gif Browser"
         supportActionBar!!.setTitle(s)
         supportActionBar!!.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.gradient, null))
     }
 
+    /**
+     * Coordinates which View will be crossfaded.
+     */
     private fun crossFadeSplash(){
         try{
             val view1 = testo
@@ -64,6 +80,9 @@ class SplashActivity : AppCompatActivity() {
         }catch(e: Exception){
         }
     }
+    /**
+     * Animates a crossfade between two views
+     */
     private fun crossfade(view1: View, view2: View) {
         view2.apply {
             alpha = 0f

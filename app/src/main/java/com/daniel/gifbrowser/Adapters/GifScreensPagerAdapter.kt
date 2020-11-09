@@ -5,6 +5,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.daniel.gifbrowser.View.FavoritesFragment
 import com.daniel.gifbrowser.View.TrendyGifsFragment
+/**
+ * Adapter for the ViewPager
+ */
 
 class GifScreensPagerAdapter(fa: FragmentActivity): FragmentStateAdapter(fa) {
     override fun getItemCount(): Int {

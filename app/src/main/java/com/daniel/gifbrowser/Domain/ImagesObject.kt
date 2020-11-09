@@ -3,6 +3,9 @@ package com.daniel.gifbrowser.Domain
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+/**
+ * POJO representing ImagesObject
+ */
 data class ImagesObject (
     @SerializedName("fixed_height")
     val fixedHeight : RenditionObject,

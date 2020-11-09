@@ -2,6 +2,9 @@ package com.daniel.gifbrowser.Domain
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+/**
+ * POJO representing the User object
+ */
 
 data class UserObject (
     @SerializedName("avatar_url")

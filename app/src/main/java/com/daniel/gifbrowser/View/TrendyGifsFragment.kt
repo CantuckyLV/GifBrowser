@@ -24,10 +24,13 @@ import com.daniel.gifbrowser.ViewModel.Factory.TrendyGifsFragmentViewModelFactor
 import com.daniel.gifbrowser.ViewModel.TrendyGifsFragmentViewModel
 
 /**
- * A simple [Fragment] subclass.
+ * A Class representing the Trending View.
  */
 class TrendyGifsFragment : Fragment() {
 
+    /**
+     * I and variable initializations.M
+     */
     private lateinit var viewModel : TrendyGifsFragmentViewModel
     private lateinit var trendyGifsRequest: TrendyGifsRequest
     private lateinit var rlLoading : RelativeLayout
@@ -43,7 +46,7 @@ class TrendyGifsFragment : Fragment() {
     private var offset = 0
     private var isLoadingMore = false
     private lateinit var recyclerViewState : Parcelable
-    private lateinit var searchTerm : String
+    private var searchTerm =""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,11 +56,16 @@ class TrendyGifsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_trendy_gifs, container, false)
     }
 
+    /**
+     * Overrides the onStart method sets an onScrollListener to the recyclerView that will call the fetchgifs method when the scroll limit is reached.
+     * Initializes the DB
+     * Initializes the Observer for the viewmodel.
+     */
     override fun onStart() {
         super.onStart()
         val db = Room.databaseBuilder(
             activity!!.applicationContext,
-            GifDB::class.java, "mediaPosts"
+            GifDB::class.java, "gifs"
         ).build()
         viewModel = ViewModelProvider(this,TrendyGifsFragmentViewModelFactory(db)).get(TrendyGifsFragmentViewModel::class.java)
         rvGifs = view!!.findViewById(R.id.rv_gifs)
@@ -93,12 +101,22 @@ class TrendyGifsFragment : Fragment() {
 
     }
 
+    /**
+     * Overrides the onResume method and calls the fetchGifs method.
+     */
     override fun onResume() {
         super.onResume()
         viewModel.getGifs()!!.observe(this, Observer { gifs -> favsgifList = gifs!! } )
         fetchGifs()
     }
 
+    /**
+     * Recieves a List of GifObjects and transformsit into a list of GifsSimpleObject that should be displayed on the RecyclerVIew.
+     * Initializes the adapter for the RecyclerView with the list ogf gifs.
+     * Checks if the "isLoadingMore variable is active to save the state of the scroll
+     * increments the offset of the list by 25. Tran
+     * @param  gifs  a List of GifObject to display on the recycler View
+     */
     fun setupGifs(gifs:ArrayList<GifObject>?):Int{
         offset +=25
         gifList = gifs!!
@@ -136,6 +154,12 @@ class TrendyGifsFragment : Fragment() {
         return 3
 
     }
+    /**
+     * Hides the loading view.
+     * Checks if the search term is empty. If empty: call requestTrending()
+     * If  search term is not empty, create a GifSearcRequest start observing the getGifSearch method
+     * @param  gifs  a List of GifObject to display on the recycler View
+     */
 
     private fun fetchGifs(){
         currentPage = 1
@@ -154,6 +178,10 @@ class TrendyGifsFragment : Fragment() {
             }
         }
     }
+    /**
+     * Starts observing the getTrendyGifs Search
+     * @param  gifs  a List of GifObject to display on the recycler View
+     */
     private fun requestTrending(){
         currentPage = 0
         rlLoading.visibility = View.VISIBLE
